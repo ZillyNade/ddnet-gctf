@@ -3,6 +3,7 @@
 #ifndef GAME_SERVER_GAMECONTROLLER_H
 #define GAME_SERVER_GAMECONTROLLER_H
 
+#include "game/server/instagib/enums.h"
 #include <base/vmath.h>
 #include <engine/map.h>
 #include <engine/shared/protocol.h>
@@ -268,6 +269,11 @@ public:
 	bool HasEnoughPlayers() const { return (IsTeamplay() && m_aTeamSize[TEAM_RED] > 0 && m_aTeamSize[TEAM_BLUE] > 0) || (!IsTeamplay() && m_aTeamSize[TEAM_RED] > 1); }
 	void SetGameState(EGameState GameState, int Timer = 0);
 	void StartMatch(bool RoundEnd);
+	EInstaGametype m_GameType = EInstaGametype::CTF;
+
+	// should this be a flag? supporting multiple weapons?
+	// that can be checked individually
+	EInstaWeapons m_Weapons = EInstaWeapons::GRENADE;
 
 protected:
 	struct CGameInfo

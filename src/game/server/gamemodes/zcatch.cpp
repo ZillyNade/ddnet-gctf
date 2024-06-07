@@ -9,6 +9,7 @@
 #include <game/version.h>
 
 #include "zcatch.h"
+#include "base/system.h"
 
 CGameControllerZcatch::CGameControllerZcatch(class CGameContext *pGameServer) :
 	CGameControllerInstagib(pGameServer)
