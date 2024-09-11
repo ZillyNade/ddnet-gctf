@@ -27,7 +27,13 @@ void IGameController::OnEndRoundInsta()
 	{
 		if(!pPlayer)
 			continue;
+		if(m_pStatsTable[0] == '\0')
+			continue;
 
+		dbg_msg("sql", "saving round stats of player '%s'", Server()->ClientName(pPlayer->GetCid()));
+		if(pPlayer->Spree() > pPlayer->m_Stats.m_BestSpree)
+			pPlayer->m_Stats.m_BestSpree = pPlayer->Spree();
+		m_pSqlStats->SaveRoundStats(Server()->ClientName(pPlayer->GetCid()), m_pStatsTable, &pPlayer->m_Stats);
 		pPlayer->m_Stats.Reset();
 	}
 }
