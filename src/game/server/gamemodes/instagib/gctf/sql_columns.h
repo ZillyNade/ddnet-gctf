@@ -11,5 +11,5 @@
 MACRO_ADD_COLUMN(FlagGrabs, "flag_grabs", "INTEGER", Int, "0", Add)
 MACRO_ADD_COLUMN(FlagCaptures, "flag_captures", "INTEGER", Int, "0", Add)
 
-// MACRO_ADD_COLUMN(FlagTime, "flag_time", "FLOAT", Float, "0", Lowest) // matching ddnet race time format
+// MACRO_ADD_COLUMN(FlagTime, "flag_time", "FLOAT", Float, "NULL", OptionalLowest) // matching ddnet race time format
 // MACRO_ADD_COLUMN(FlaggerKills, "flagger_kills", "INTEGER", Int, "0", Add)

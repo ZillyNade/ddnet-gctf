@@ -3,6 +3,7 @@
 
 #include <engine/server/databases/connection.h>
 #include <game/server/instagib/sql_stats_player.h>
+#include <optional>
 
 class CExtraColumns
 {
@@ -144,6 +145,45 @@ public:
 		if(Current < Other)
 			return Current;
 		return Other;
+	}
+
+	std::optional<float> MergeFloatOptionalLowest(std::optional<float> Current, std::optional<float> Other)
+	{
+		if(Current.has_value() && !Other.has_value())
+			return Current.value();
+		if(!Current.has_value() && Other.has_value())
+			return Other.value();
+		if(!Current.has_value() && !Other.has_value())
+			return std::nullopt;
+
+		if(Current.value() < Other.value())
+			return Current;
+		return Other;
+	}
+
+
+	bool HasValue(std::optional<float> Value)
+	{
+		if(Value.has_value())
+			return true;
+		return false;
+	}
+
+	bool HasValue(int Value)
+	{
+		return true;
+	}
+
+	float GetValue(std::optional<float> Value)
+	{
+		if(Value.has_value())
+			return Value.value();
+		return 0.0f;
+	}
+
+	int GetValue(int Value)
+	{
+		return Value;
 	}
 };
 

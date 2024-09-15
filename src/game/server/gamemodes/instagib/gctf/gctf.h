@@ -5,6 +5,7 @@
 #include <game/server/instagib/sql_stats_player.h>
 
 #include <game/server/gamemodes/instagib/ctf.h>
+#include <optional>
 
 class CGCTFColumns : public CExtraColumns
 {
@@ -49,6 +50,12 @@ public:
 
 	void InsertBindings(int *pOffset, IDbConnection *pSqlServer, const CSqlStatsPlayer *pStats) override
 	{
+// #define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method)
+// 		if(HasValue(pStats->m_FlagTime))
+// 			pSqlServer->BindFloat((*pOffset)++, GetValue(pStats->m_FlagTime));
+// 		else
+// 			(*pOffset)++;
+
 #define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method) pSqlServer->Bind##bind_type((*pOffset)++, pStats->m_##name);
 #include "sql_columns.h"
 #undef MACRO_ADD_COLUMN

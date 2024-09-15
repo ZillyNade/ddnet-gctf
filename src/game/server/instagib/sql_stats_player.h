@@ -18,7 +18,7 @@ public:
 	int m_FlagCaptures;
 	int m_FlagGrabs;
 
-	// int m_FlagTime; // TODO: float or what does ddnet use for times?
+	std::optional<float> m_FlagTime; // matching ddnet's m_BestTime
 	// int m_FlaggerKills;
 
 	void Reset()
@@ -28,15 +28,17 @@ public:
 		m_BestSpree = 0;
 		m_FlagCaptures = 0;
 		m_FlagGrabs = 0;
+		m_FlagTime = 0;
 	}
 
 	void Merge(const CSqlStatsPlayer *pOther)
 	{
 		m_Kills += pOther->m_Kills;
 		m_Deaths += pOther->m_Deaths;
-		m_BestSpree += pOther->m_BestSpree;
+		m_BestSpree = std::max(pOther->m_BestSpree, m_BestSpree);
 		m_FlagCaptures += pOther->m_FlagCaptures;
 		m_FlagGrabs += pOther->m_FlagGrabs;
+		m_FlagTime = std::min(pOther->m_FlagTime, m_FlagTime);
 	}
 
 	void Dump(const char *pSystem = "stats") const
@@ -46,6 +48,7 @@ public:
 		dbg_msg(pSystem, "  spree: %d", m_BestSpree);
 		dbg_msg(pSystem, "  flag_captures: %d", m_FlagCaptures);
 		dbg_msg(pSystem, "  flag_grabs: %d", m_FlagGrabs);
+		dbg_msg(pSystem, "  flag_time: %.2f", m_FlagTime);
 	}
 
 	bool HasValues() const
