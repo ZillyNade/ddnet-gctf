@@ -174,6 +174,18 @@ void CGameControllerInstaBaseCTF::OnFlagCapture(class CFlag *pFlag, float Time)
 	CPlayer *pPlayer = pFlag->m_pCarrier->GetPlayer();
 	pPlayer->m_Stats.m_FlagCaptures++;
 
+	CCharacter *pChr = pPlayer->GetCharacter();
+	if(pChr)
+	{
+		if(!pPlayer->m_Stats.m_FlagTime.has_value() || pPlayer->m_Stats.m_FlagTime.value() > Time)
+		{
+			pPlayer->m_Stats.m_FlagTime = Time;
+			dbg_msg("ddnet-insta", "better flag time %.2f", Time);
+		}
+		dbg_msg("ddnet-insta", "got flag time %.2f", Time);
+	}
+
+
 	if(g_Config.m_SvFastcap)
 		Teams().OnCharacterFinish(pPlayer->GetCid());
 }

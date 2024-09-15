@@ -50,13 +50,11 @@ public:
 
 	void InsertBindings(int *pOffset, IDbConnection *pSqlServer, const CSqlStatsPlayer *pStats) override
 	{
-// #define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method)
-// 		if(HasValue(pStats->m_FlagTime))
-// 			pSqlServer->BindFloat((*pOffset)++, GetValue(pStats->m_FlagTime));
-// 		else
-// 			(*pOffset)++;
-
-#define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method) pSqlServer->Bind##bind_type((*pOffset)++, pStats->m_##name);
+#define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method) \
+		if(HasValue(pStats->m_##name)) \
+			pSqlServer->Bind##bind_type((*pOffset)++, GetValue(pStats->m_##name)); \
+		else \
+			pSqlServer->BindNull((*pOffset)++);
 #include "sql_columns.h"
 #undef MACRO_ADD_COLUMN
 	}
@@ -69,8 +67,12 @@ public:
 	void ReadAndMergeStats(int *pOffset, IDbConnection *pSqlServer, CSqlStatsPlayer *pOutputStats, const CSqlStatsPlayer *pNewStats) override
 	{
 #define MACRO_ADD_COLUMN(name, sql_name, sql_type, bind_type, default, merge_method) \
-	pOutputStats->m_##name = Merge##bind_type##merge_method(pSqlServer->Get##bind_type((*pOffset)++), pNewStats->m_##name); \
-	dbg_msg("gctf", "db[%d]=%d round=%d => merge=%d", (*pOffset) - 1, pSqlServer->Get##bind_type((*pOffset) - 1), pNewStats->m_##name, pOutputStats->m_##name);
+	if(pSqlServer->IsNull(*pOffset)) \
+		pOutputStats->m_##name = pNewStats->m_##name; \
+	else \
+		pOutputStats->m_##name = pNewStats->Merge##bind_type##merge_method(pSqlServer->Get##bind_type((*pOffset)++), pNewStats->m_##name); \
+	dbg_msg("gctf", "db[%d]=%d round=%d => merge=%d", \
+	 (*pOffset) - 1, pSqlServer->Get##bind_type((*pOffset) - 1), pNewStats->m_##name, HasValue(pOutputStats->m_##name) ? GetValue(pOutputStats->m_##name) : 0);
 #include "sql_columns.h"
 #undef MACRO_ADD_COLUMN
 	}

@@ -114,54 +114,6 @@ public:
 	*/
 	virtual void ReadAndMergeStats(int *pOffset, IDbConnection *pSqlServer, CSqlStatsPlayer *pOutputStats, const CSqlStatsPlayer *pNewStats) = 0;
 
-	int MergeIntAdd(int Current, int Other)
-	{
-		return Current + Other;
-	}
-
-	int MergeIntHighest(int Current, int Other)
-	{
-		if(Current > Other)
-			return Current;
-		return Other;
-	}
-
-	int MergeIntLowest(int Current, int Other)
-	{
-		if(Current < Other)
-			return Current;
-		return Other;
-	}
-
-	float MergeFloatHighest(float Current, float Other)
-	{
-		if(Current > Other)
-			return Current;
-		return Other;
-	}
-
-	float MergeFloatLowest(float Current, float Other)
-	{
-		if(Current < Other)
-			return Current;
-		return Other;
-	}
-
-	std::optional<float> MergeFloatOptionalLowest(std::optional<float> Current, std::optional<float> Other)
-	{
-		if(Current.has_value() && !Other.has_value())
-			return Current.value();
-		if(!Current.has_value() && Other.has_value())
-			return Other.value();
-		if(!Current.has_value() && !Other.has_value())
-			return std::nullopt;
-
-		if(Current.value() < Other.value())
-			return Current;
-		return Other;
-	}
-
-
 	bool HasValue(std::optional<float> Value)
 	{
 		if(Value.has_value())

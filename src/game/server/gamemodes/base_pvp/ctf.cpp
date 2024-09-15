@@ -9,6 +9,7 @@
 #include <game/version.h>
 
 #include "ctf.h"
+#include "base/system.h"
 
 CGameControllerBaseCTF::CGameControllerBaseCTF(class CGameContext *pGameServer) :
 	CGameControllerPvp(pGameServer)
